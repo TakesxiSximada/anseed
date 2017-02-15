@@ -39,7 +39,7 @@ ANSIBLE_PLAYBOOK ?= $(ANSIBLE_VENV)/bin/ansible-playbook
 # S3_UPLOAD_PARAMETERS ?= aws s3 sync $(PARAMETERS_DIR)/ $(S3_PARAMETERS_URI) --acl authenticated-read
 
 
-# .DEFAULT_GOAL := help
+.DEFAULT_GOAL := help
 
 
 # .PHONY: bucket
@@ -156,6 +156,8 @@ ANSIBLE_PLAYBOOK ?= $(ANSIBLE_VENV)/bin/ansible-playbook
 
 .PHONY: env
 env:
+	@# Create venv.
+
 	virtualenv $(ANSIBLE_VENV) -p python2.7
 	if [ -e $(ANSEED)/requirements.txt ]; then \
 			$(ANSIBLE_VENV)/bin/pip install -r $(ANSEED)/requirements.txt; \
