@@ -167,6 +167,15 @@ env:
 	fi
 
 
+.PHONY:
+play:
+	@## book=PLAYBOOK
+	@#
+	@# Execute playbook
+
+	$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book)
+
+
 .PHONY: help
 help:
 	@# Display usage.
