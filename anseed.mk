@@ -9,6 +9,12 @@
 
 ANSIBLE_VENV ?= $(CURDIR)/.venv
 ANSIBLE_PLAYBOOK ?= $(ANSIBLE_VENV)/bin/ansible-playbook
+ANSIBLE_VAULT ?= $(ANSIBLE_VENV)/bin/ansible-vault
+
+VAULT_PASSWORD_FILE ?= ~/.ansible/vault_password
+GALAXY := $(ANSIBLE_VENV)/bin/ansible-galaxy
+GALAXY_REQUIREMENTS := galaxy.txt
+
 
 # ENVIRON ?= environ
 # TEMPLATES ?= templates
@@ -173,7 +179,50 @@ play:
 	@#
 	@# Execute playbook
 
-	$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book)
+	$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) --extra-vars=environ=$(environ) \
+		--vault-password-file $(VAULT_PASSWORD_FILE)
+
+.PHONY:
+vault-show:
+	@## fiel=FILE
+	@#
+	@# View encrypted file
+
+
+	$(ANSIBLE_VAULT) view $(file) --vault-password-file $(VAULT_PASSWORD_FILE)
+
+.PHONY:
+vault-edit:
+	@## file=FILE
+	@#
+	@# Edit encrypted file
+
+	$(ANSIBLE_VAULT) edit $(file) --vault-password-file $(VAULT_PASSWORD_FILE)
+
+.PHONY:
+vault-encrypt:
+	@## file=FILE
+	@#
+	@# Execute encrypt
+
+	$(ANSIBLE_VAULT) encrypt $(file) --vault-password-file $(VAULT_PASSWORD_FILE)
+
+.PHONY:
+vault-rekey:
+	@## file=FILE
+	@#
+	@# Rekey encrypted file
+
+	$(ANSIBLE_VAULT) rekey $(file)
+
+
+.PHONY: galaxy
+galaxy:
+	@# Install Galaxy packages
+	for line in `cat $(GALAXY_REQUIREMENTS)`; \
+		do \
+			$(GALAXY) install $$line; \
+		done
 
 
 .PHONY: help
