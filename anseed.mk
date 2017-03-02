@@ -33,12 +33,18 @@ env:
 
 .PHONY:
 play:
-	@## book=PLAYBOOK
+	@## book=PLAYBOOK [host=HOST_OR_TAG]
 	@#
 	@# Execute playbook
 
-	$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) --extra-vars=environ=$(environ) \
-		--vault-password-file $(VAULT_PASSWORD_FILE)
+	if [ $(host) ]; then \
+		$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) --extra-vars=environ=$(environ) \
+			--vault-password-file $(VAULT_PASSWORD_FILE) -l $(host); \
+	else \
+		$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) --extra-vars=environ=$(environ) \
+			--vault-password-file $(VAULT_PASSWORD_FILE); \
+	fi
+
 
 .PHONY:
 vault-show:
@@ -46,8 +52,8 @@ vault-show:
 	@#
 	@# View encrypted file
 
-
 	$(ANSIBLE_VAULT) view $(file) --vault-password-file $(VAULT_PASSWORD_FILE)
+
 
 .PHONY:
 vault-edit:
