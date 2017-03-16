@@ -38,10 +38,10 @@ play:
 	@# Execute playbook
 
 	if [ $(host) ]; then \
-		$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) --extra-vars=environ=$(environ) \
+		$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) \
 			--vault-password-file $(VAULT_PASSWORD_FILE) -l $(host); \
 	else \
-		$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) --extra-vars=environ=$(environ) \
+		$(ANSIBLE_PLAYBOOK) -i environ/$(environ)/inventry $(book) \
 			--vault-password-file $(VAULT_PASSWORD_FILE); \
 	fi
 
